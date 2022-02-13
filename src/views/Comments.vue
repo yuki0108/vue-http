@@ -10,9 +10,9 @@
     <button @click="createComment">コメントをサーバーに送る</button>
     <h2>掲示板</h2>
     <div v-for="post in posts" :key="post.name">
-    <div>名前：{{ post.fields.name.stringValue }}</div>
-    <br />
-    <div>コメント：{{ post.fields.comment.stringValue }}</div>
+      <div>名前：{{ post.fields.name.stringValue }}</div>
+      <br />
+      <div>コメント：{{ post.fields.comment.stringValue }}</div>
     </div>
   </div>
 </template>
@@ -28,11 +28,18 @@ export default {
       posts: [],
     };
   },
+  computed: {
+    idToken() {
+      return this.$store.getters.idToken;
+    },
+  },
   created() {
     axios
-      .get(
-        "/comments"
-      )
+      .get("/comments", {
+        headers: {
+          Authorization: `Bearer ${this.idToken}`,
+        },
+      })
       .then((response) => {
         this.posts = response.data.documents;
         console.log(response.data.documents);
@@ -40,26 +47,19 @@ export default {
   },
   methods: {
     createComment() {
-      axios
-        .post(
-          "/comments",
-          {
-            fields: {
-              name: {
-                stringValue: this.name,
-              },
-              comment: {
-                stringValue: this.comment,
-              },
-            },
-          }
-        )
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      axios.post("/comments", {
+        fields: {
+          name: {
+            stringValue: this.name,
+          },
+          comment: {
+            stringValue: this.comment,
+          },
+        },
+        headers: {
+          Authorization: `Bearer ${this.idToken}`,
+        },
+      });
       this.name = "";
       this.comment = "";
     },
