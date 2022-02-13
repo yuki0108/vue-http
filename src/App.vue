@@ -9,6 +9,11 @@
     <br /><br />
     <button @click="createComment">コメントをサーバーに送る</button>
     <h2>掲示板</h2>
+    <div v-for="post in posts" :key="post.name">
+    <div>名前：{{ post.fields.name.stringValue }}</div>
+    <br />
+    <div>コメント：{{ post.fields.comment.stringValue }}</div>
+    </div>
   </div>
 </template>
 
@@ -20,39 +25,45 @@ export default {
     return {
       name: "",
       comment: "",
+      posts: [],
     };
   },
   created() {
-    axios.get('https://firestore.googleapis.com/v1/projects/vue-http-702b0/databases/(default)/documents/comments',
-    )
-    .then(response => {
-      console.log(response);
+    axios
+      .get(
+        "https://firestore.googleapis.com/v1/projects/vue-http-702b0/databases/(default)/documents/comments"
+      )
+      .then((response) => {
+        this.posts = response.data.documents;
+        console.log(response.data.documents);
       });
   },
   methods: {
     createComment() {
-      axios.post('https://firestore.googleapis.com/v1/projects/vue-http-702b0/databases/(default)/documents/comments',
-      {
-        fields: {
-          name: {
-            stringValue: this.name
-          },
-          comment: {
-            stringValue: this.comment
+      axios
+        .post(
+          "https://firestore.googleapis.com/v1/projects/vue-http-702b0/databases/(default)/documents/comments",
+          {
+            fields: {
+              name: {
+                stringValue: this.name,
+              },
+              comment: {
+                stringValue: this.comment,
+              },
+            },
           }
-        }
-      })
-      .then(response => {
-        console.log(response);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-      this.name = '';
-      this.comment = '';
-
-    }
-  }
+        )
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      this.name = "";
+      this.comment = "";
+    },
+  },
 };
 </script>
 
