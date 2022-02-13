@@ -22,6 +22,13 @@ export default {
       comment: "",
     };
   },
+  created() {
+    axios.get('https://firestore.googleapis.com/v1/projects/vue-http-702b0/databases/(default)/documents/comments',
+    )
+    .then(response => {
+      console.log(response);
+      });
+  },
   methods: {
     createComment() {
       axios.post('https://firestore.googleapis.com/v1/projects/vue-http-702b0/databases/(default)/documents/comments',
