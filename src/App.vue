@@ -31,7 +31,7 @@ export default {
   created() {
     axios
       .get(
-        "https://firestore.googleapis.com/v1/projects/vue-http-702b0/databases/(default)/documents/comments"
+        "/comments"
       )
       .then((response) => {
         this.posts = response.data.documents;
@@ -42,7 +42,7 @@ export default {
     createComment() {
       axios
         .post(
-          "https://firestore.googleapis.com/v1/projects/vue-http-702b0/databases/(default)/documents/comments",
+          "/comments",
           {
             fields: {
               name: {
