@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import axios from "../axios-auth";
 import router from "../router";
+import axiosRefresh from "../axios-refresh"
 
 Vue.use(Vuex);
 
@@ -31,6 +32,11 @@ export default new Vuex.Store({
         .then((response) => {
           commit;
           "updateIdToken", response.data.idToken;
+          setTimeout({} => {
+            axiosRefresh.post('/token?key=AIzaSyD5omkikJJUyixUQN1r4b6FZNTd-gehg_Y');
+          }, {
+            grant_type: 'refresh token'
+          } response.data.expiresIn * 1000)
           router.push("/");
         });
     },
